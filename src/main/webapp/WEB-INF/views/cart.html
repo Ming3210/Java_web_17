@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Giỏ hàng</title>
+    <style>
+        /* Style cơ bản cho bảng giỏ hàng */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f7f7f7;
+        }
+        input[type="number"] {
+            width: 60px;
+        }
+        .actions button {
+            margin-right: 5px;
+        }
+        .total-section {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .total-price {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Giỏ hàng của bạn</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Tên sản phẩm</th>
+        <th>Giá</th>
+        <th>Số lượng</th>
+        <th>Thành tiền</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${cartItems}">
+        <td th:text="${item.product.productName}">Tên SP</td>
+        <td th:text="${#numbers.formatDecimal(item.product.price, 1, 2)} + ' VND'">100000</td>
+        <td>
+            <form th:action="@{/cart/update}" method="post" class="update-form">
+                <input type="hidden" name="cartId" th:value="${item.id}" />
+                <input type="number" name="quantity" min="1" th:value="${item.quantity}" required />
+                <button type="submit">Cập nhật</button>
+            </form>
+        </td>
+        <td th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 1, 2)} + ' VND'">200000</td>
+        <td class="actions">
+            <form th:action="@{/cart/delete}" method="post" th:object="${item}">
+                <input type="hidden" name="cartId" th:value="${item.id}" />
+                <button type="submit" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng?')">Xóa</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- CÁCH 1: Sử dụng th:with để tạo biến tạm -->
+<div class="total-section" th:with="total=${#aggregates.sum(cartItems.![product.price * quantity])}">
+    <h3>Tổng tiền: <span class="total-price" th:text="${#numbers.formatDecimal(total, 1, 2)} + ' VND'">0 VND</span></h3>
+</div>
+
+<!-- CÁCH 2: Tính trực tiếp trong th:text -->
+<div class="total-section">
+    <h3>Tổng tiền:
+        <span class="total-price"
+              th:text="${#numbers.formatDecimal(#aggregates.sum(cartItems.![product.price * quantity]), 1, 2)} + ' VND'">
+            0 VND
+        </span>
+    </h3>
+</div>
+
+<!-- CÁCH 3: Sử dụng stream (nếu Thymeleaf 3.1+) -->
+<div class="total-section" style="display: none;"
+     th:with="streamTotal=${cartItems.stream().mapToDouble(item -> item.product.price * item.quantity).sum()}">
+    <h3>Tổng tiền (Stream): <span class="total-price" th:text="${#numbers.formatDecimal(streamTotal, 1, 2)} + ' VND'">0 VND</span></h3>
+</div>
+
+<a href="/products">← Tiếp tục mua hàng</a>
+
+<!-- Debug: Hiển thị từng giá trị để kiểm tra -->
+<div style="margin-top: 30px; padding: 10px; background: #eee; font-size: 12px;">
+    <h4>Debug Info:</h4>
+    <div th:each="item : ${cartItems}">
+        <span th:text="${item.product.productName}">Product</span>:
+        <span th:text="${item.product.price}">Price</span> ×
+        <span th:text="${item.quantity}">Qty</span> =
+        <span th:text="${item.product.price * item.quantity}">Subtotal</span>
+    </div>
+    <div>
+        <strong>Total calculated: </strong>
+        <span th:text="${#aggregates.sum(cartItems.![product.price * quantity])}">0</span>
+    </div>
+</div>
+
+</body>
+</html>

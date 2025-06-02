@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách sản phẩm</title>
+    <style>
+        /* Reset và thiết lập chung */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        /* Tiêu đề chính */
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Container cho bảng */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        /* Styling cho bảng */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Header của bảng */
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+        }
+
+        /* Các ô dữ liệu */
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Hiệu ứng hover cho các hàng */
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9ff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Styling cho ảnh sản phẩm */
+        td img {
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        td img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Styling cho giá */
+        td:nth-child(4) {
+            font-weight: 600;
+            color: #e74c3c;
+            font-size: 1.05rem;
+        }
+
+        /* Styling cho số lượng */
+        td:nth-child(5) {
+            font-weight: 500;
+            color: #27ae60;
+        }
+
+        /* Container phân trang */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* Styling chung cho các nút phân trang */
+        .pagination a,
+        .pagination span {
+            padding: 10px 15px;
+            border: 2px solid #dee2e6;
+            text-decoration: none;
+            color: #495057;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: white;
+            min-width: 44px;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hiệu ứng hover cho các nút */
+        .pagination a:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Trang hiện tại */
+        .pagination .current {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Nút Previous và Next */
+        .pagination a:first-child,
+        .pagination a:last-child {
+            font-weight: 600;
+            padding: 10px 20px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 8px 6px;
+            }
+
+            td img {
+                max-width: 60px;
+                max-height: 60px;
+            }
+
+            .pagination {
+                gap: 4px;
+            }
+
+            .pagination a,
+            .pagination span {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+                min-width: 36px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Ẩn một số cột trên mobile để tiết kiệm không gian */
+            th:nth-child(3),
+            td:nth-child(3) {
+                display: none;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            th, td {
+                padding: 6px 4px;
+            }
+
+            .pagination a,
+            .pagination span {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Hiệu ứng loading cho ảnh */
+        td img {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Thêm border radius cho bảng */
+        table {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Styling cho hàng cuối cùng */
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Thêm một chút space cho container chính */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<h2>Danh sách sản phẩm</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tên sản phẩm</th>
+        <th>Mô tả</th>
+        <th>Giá</th>
+        <th>Số lượng</th>
+        <th>Ảnh</th>
+        <th>Chi tiết</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td th:text="${product.id}">1</td>
+        <td th:text="${product.productName}">Tên sản phẩm</td>
+        <td th:text="${product.description}">Mô tả</td>
+        <td th:text="${#numbers.formatDecimal(product.price,1,2)}">100.00</td>
+        <td th:text="${product.stock}">10</td>
+        <td>
+            <img th:src="@{${product.image}}" alt="Ảnh sản phẩm" style="max-width: 100px; max-height: 100px;" />
+        </td>
+        <td>
+            <a th:href="@{/products/{id}(id=${product.id})}" th:text="${product.productName}">Xem chi tiết</a>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+
+<div class="pagination">
+    <a th:if="${currentPage > 1}" th:href="@{/products(page=${currentPage - 1}, size=${size})}">« Prev</a>
+    <span th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
+        <a th:if="${pageNum != currentPage}" th:href="@{/products(page=${pageNum}, size=${size})}" th:text="${pageNum}">1</a>
+        <span th:if="${pageNum == currentPage}" th:text="${pageNum}" class="current">1</span>
+    </span>
+    <a th:if="${currentPage < totalPages}" th:href="@{/products(page=${currentPage + 1}, size=${size})}">Next »</a>
+</div>
+
+</body>
+</html>

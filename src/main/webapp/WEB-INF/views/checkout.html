@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Thanh toán</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { max-width: 500px; margin: auto; background: #f9f9f9; padding: 20px; border-radius: 8px; }
+        label { display: block; margin-top: 15px; font-weight: bold; }
+        input[type="text"], input[type="tel"], textarea {
+            width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px;
+        }
+        button {
+            margin-top: 20px; padding: 10px 20px; background-color: #28a745; color: white;
+            border: none; border-radius: 4px; cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Form Thanh Toán</h2>
+
+<form th:action="@{/order/submit}" method="post" th:object="${order}">
+    <label for="recipientName">Tên người nhận:</label>
+    <input type="text" id="recipientName" th:field="*{recipientName}" required />
+
+    <label for="phoneNumber">Số điện thoại:</label>
+    <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" pattern="[0-9]{10,15}" required />
+
+    <label for="address">Địa chỉ nhận hàng:</label>
+    <textarea id="address" th:field="*{address}" rows="3" required></textarea>
+
+    <!-- Hidden fields: customerId, totalMoney, listProduct -->
+    <input type="hidden" th:field="*{customerId}" />
+    <input type="hidden" th:field="*{totalMoney}" />
+    <input type="hidden" th:name="listProduct" th:value="${#strings.arrayJoin(order.listProduct, ',')}" />
+
+    <button type="submit">Xác nhận thanh toán</button>
+</form>
+
+<a href="/cart" style="display:block; margin-top:20px;">← Quay lại giỏ hàng</a>
+
+</body>
+</html>

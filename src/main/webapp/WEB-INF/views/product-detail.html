@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Chi tiết sản phẩm</title>
+</head>
+<body>
+<h2 th:text="${product.productName}">Tên sản phẩm</h2>
+<img th:src="@{${product.image}}" alt="Ảnh sản phẩm" width="200">
+<p><strong>Mô tả:</strong> <span th:text="${product.description}">Mô tả</span></p>
+<p><strong>Giá:</strong> <span th:text="${#numbers.formatDecimal(product.price,1,2)}">100.00</span> VND</p>
+<p><strong>Số lượng còn:</strong> <span th:text="${product.stock}">10</span></p>
+
+<form th:action="@{/cart/add}" method="post">
+    <input type="hidden" name="productId" th:value="${product.id}" />
+    <label for="quantity">Số lượng:</label>
+    <input id="quantity" type="number" name="quantity" min="1" value="1"  />
+    <button type="submit">Thêm vào giỏ hàng</button>
+</form>
+
+<a th:href="@{/home}">← Quay lại danh sách</a>
+</body>
+</html>
