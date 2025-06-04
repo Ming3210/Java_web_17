@@ -18,6 +18,8 @@
         <mapping class="ra.entity.Customer"/>
         <mapping class="ra.entity.Product"/>
         <mapping class="ra.entity.ProductCart"/>
+        <mapping class="ra.entity.Order"/>
+        <mapping class="ra.entity.CartItemDTO"/>
 
 
     </session-factory>

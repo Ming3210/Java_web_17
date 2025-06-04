@@ -27,4 +27,14 @@ public class ProductServiceImp implements ProductService{
     public Product findById(Long id) {
         return productRepository.findById(id);
     }
+
+    @Override
+    public boolean save(Product product) {
+        return productRepository.save(product);
+    }
+
+    @Override
+    public boolean deleteById(Long id) {
+        return productRepository.deleteById(id);
+    }
 }

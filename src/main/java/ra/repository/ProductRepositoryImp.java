@@ -44,4 +44,48 @@ public class ProductRepositoryImp implements ProductRepository{
         }
     }
 
+    @Override
+    public boolean save(Product product) {
+        Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            session.saveOrUpdate(product);
+            session.getTransaction().commit();
+            return true;
+        } catch (Exception e) {
+            if (session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public boolean deleteById(Long id) {
+        Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            Product product = session.get(Product.class, id);
+            if (product != null) {
+                session.delete(product);
+                session.getTransaction().commit();
+                return true;
+            }
+            session.getTransaction().rollback();
+            return false;
+        } catch (Exception e) {
+            if (session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            session.close();
+        }
+    }
+
+
 }

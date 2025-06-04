@@ -26,7 +26,7 @@ public class AuthController {
         Customer user = (Customer) session.getAttribute("loggedInUser");
         if (user != null) {
             if ("ADMIN".equalsIgnoreCase(user.getRole())) {
-                return "redirect:/admin/dashboard";
+                return "redirect:/dashboard";
             } else if ("USER".equalsIgnoreCase(user.getRole())) {
                 return "redirect:/home";
             }
@@ -63,7 +63,7 @@ public class AuthController {
             if (user != null) {
                 if ("ADMIN".equalsIgnoreCase(user.getRole())) {
                     session.setAttribute("loggedInUser", user);
-                    return "redirect:/admin/dashboard";
+                    return "admin/dashboard";
                 } else if ("USER".equalsIgnoreCase(user.getRole())) {
                     session.setAttribute("loggedInUser", user);
                     session.setAttribute("customerId", user.getId()); // ⚠️ Gán customerId cho session

@@ -3,6 +3,7 @@ package ra.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 
@@ -28,4 +29,5 @@ public class Product {
 
     @Column(columnDefinition = "TEXT")
     private String image;
+
 }

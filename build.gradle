@@ -41,7 +41,8 @@ dependencies {
 
     //mysql
     implementation('mysql:mysql-connector-java:8.0.33')
-
+    implementation("commons-fileupload:commons-fileupload:1.5")
+    implementation("com.cloudinary:cloudinary-http44:1.32.0")
     //thymeleaf
     implementation("org.thymeleaf:thymeleaf-spring5:3.0.12.RELEASE")
 

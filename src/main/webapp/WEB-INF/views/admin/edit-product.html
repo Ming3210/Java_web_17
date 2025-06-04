@@ -1,0 +1,9 @@
+<form th:action="@{/admin/products/update}" th:object="${product}" method="post">
+    <input type="hidden" th:field="*{id}" />
+    <label>Tên sản phẩm: <input type="text" th:field="*{productName}" /></label><br/>
+    <label>Mô tả: <textarea th:field="*{description}"></textarea></label><br/>
+    <label>Giá: <input type="number" th:field="*{price}" step="0.01" /></label><br/>
+    <label>Số lượng: <input type="number" th:field="*{stock}" /></label><br/>
+    <label>Ảnh: <input type="text" th:field="*{image}" /></label><br/>
+    <button type="submit">Cập nhật</button>
+</form>
