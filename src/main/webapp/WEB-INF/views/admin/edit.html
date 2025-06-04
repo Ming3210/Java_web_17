@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Chỉnh sửa người dùng</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<main class="main-content">
+    <h2>Chỉnh sửa người dùng</h2>
+    <form th:action="@{/customers/edit}" th:object="${customer}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" th:field="*{username}" required />
+        </div>
+
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" th:field="*{password}" required />
+        </div>
+
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" th:field="*{email}" required />
+        </div>
+
+        <div>
+            <label for="phoneNumber">Số điện thoại:</label>
+            <input type="text" id="phoneNumber" th:field="*{phoneNumber}" required />
+        </div>
+
+        <div>
+            <label for="role">Vai trò:</label>
+            <select id="role" th:field="*{role}">
+                <option value="user" th:selected="${customer.role == 'user'}">User</option>
+                <option value="admin" th:selected="${customer.role == 'admin'}">Admin</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Trạng thái:</label>
+            <label><input type="radio" th:field="*{status}" th:value="true" /> Hoạt động</label>
+            <label><input type="radio" th:field="*{status}" th:value="false" /> Khóa</label>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            <a href="/admin/users" class="btn btn-secondary">Hủy</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>
